@@ -57,6 +57,17 @@ public class Player {
         }
     }
 
+    public boolean takeItem (String itemName){
+        boolean isNull = false;
+        Item item = currentRoom.findItem(itemName);
+        if (item != null) {
+            inventory.add(item);
+            currentRoom.removeItem(item);
+            isNull = true;
+        }
+        return isNull;
+    }
+
     public boolean dropItem (String itemName){
         boolean isNull = false;
         for (int i = 0; i < getInventoryList().size(); i++) {
@@ -68,21 +79,5 @@ public class Player {
             }
         }
         return isNull;
-    }
-
-
-    public boolean takeItem (String itemName){
-            boolean isNull = false;
-            Item item = currentRoom.findItem(itemName);
-            if (item != null) {
-                inventory.add(item);
-                currentRoom.removeItem(item);
-                isNull = true;
-            }
-            return isNull;
-
-        //TODO
-        /*Item findItem = currentRoom.findItem(name);
-        inventory.add(findItem);*/
     }
 }

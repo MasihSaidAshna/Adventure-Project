@@ -1,11 +1,11 @@
 import java.util.Scanner;
 
 public class UserInterface {
-    private Adventure adventure = new Adventure(); //Metode kald
+    private Adventure adventure = new Adventure(); //Adventure objekt
 
-    private Player player = new Player();
+    private Player player = new Player(); //Player objekt
 
-    private boolean gameRunning = true; // erklære gamerunning til true
+    private boolean gameRunning = true; // Initialiserer gameRunning som true
     private Scanner sc = new Scanner(System.in); // Scanner til bruger input
 
     public void startprogram() { //Metode
@@ -39,7 +39,7 @@ public class UserInterface {
                     handleRoomDirection(goSouth);
                     break;
                 case "look":
-                    lookRoom();
+                    lookRoom(adventure.player.getCurrentRoom());
                     break;
                 case "help":
                     System.out.println("""
@@ -54,13 +54,13 @@ public class UserInterface {
                 case "take":
                     System.out.println("Please enter the name of the item you want to take");
                     String itemTake = sc.nextLine().toLowerCase();
-                    if (adventure.player.takeItem(itemTake) == true) {System.out.println("Item added to inventory");}
+                    if (adventure.player.takeItem(itemTake)) {System.out.println("Item added to inventory");}
                     else {System.out.println("Item was not found in this room");}
                     break;
                 case "drop":
                     System.out.println("Please enter the name of the item you want to drop");
                     String itemDrop = sc.nextLine().toLowerCase();
-                    if (adventure.player.dropItem(itemDrop) == true) {System.out.println("Item removed from inventory");}
+                    if (adventure.player.dropItem(itemDrop)) {System.out.println("Item removed from inventory");}
                     else {System.out.println("Item was not found in your inventory");}
                     break;
                 case "exit":
@@ -70,8 +70,15 @@ public class UserInterface {
         }
     }
 
-    public void lookRoom() {
-        System.out.println("You are in " + showRoomItems(adventure.player.getCurrentRoom()/*currentRoom*/));
+    public void lookRoom(Room room) { //Method used for the "look" command
+        String roomDetails;
+        if (room.getItemList().isEmpty()) {
+            roomDetails = room.getName() + "\n" + room.getDescription() + "\n" +  "Room is empty!";
+        }
+        else {
+            roomDetails = room.toString();
+        }
+        System.out.println("You are in " + roomDetails);
     }
 
     public void handleRoomDirection(boolean goDirection) {
@@ -82,11 +89,15 @@ public class UserInterface {
         }
     }
 
-    public String showRoomItems(Room room) {
+    public String showRoomItems(Room room) { //Method used by handleRoomDirection
+        String roomDetails;
         if (room.getItemList().isEmpty()) {
-            System.out.println("Room is empty!");
+            roomDetails = room.getName() + "\n" + room.getDescription() + "\n" +  "Room is empty!";
         }
-        return room.toString();
+        else {
+            roomDetails = room.toString();
+        }
+        return roomDetails;
     }
 
     public void showPlayerItems () {
