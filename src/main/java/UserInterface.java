@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class UserInterface {
-    private Adventure adventure = new Adventure(); //Adventure objekt
+    private Adventure adventure = new Adventure(); //Adventure objekt skabes
 
     private Player player = new Player(); //Player objekt
 
@@ -11,8 +11,12 @@ public class UserInterface {
     public void startprogram() { //Metode
         //Menu til brugeren
         System.out.println("""
+                _____________________________________________________________________
                 Welcome To The Adventure Game
+                In this game you can explore a dungeon and interact with items inside
+                If you need help try entering the "help" command
                 Where do you want to go?
+                _____________________________________________________________________
                     """);
 
         while (gameRunning) { //While loop som inderholder en switch case, som kører så længe gameRunning er true
@@ -43,9 +47,14 @@ public class UserInterface {
                     break;
                 case "help":
                     System.out.println("""
-                            You can choose to go north, east, south or west.
-                            You can type look to see the current room's description.
-                            You can close the game by typing exit.
+                            _____________________________________________________________________
+                            You can choose to go "north", "east", "south" or "west".
+                            You can type "look" to see the current room's description.
+                            You can interact with items by writing "take", "drop" and "eat"
+                            You can see your inventory by typing "inventory", "invent" or "inv"
+                            You can see your current health by typing "health" or "h"
+                            You can close the game by typing "exit".
+                            _____________________________________________________________________
                             """);
                     break;
                 case "inventory", "inv", "invent":
@@ -54,14 +63,20 @@ public class UserInterface {
                 case "take":
                     System.out.println("Please enter the name of the item you want to take");
                     String itemTake = sc.nextLine().toLowerCase();
-                    if (adventure.player.takeItem(itemTake)) {System.out.println("Item added to inventory");}
-                    else {System.out.println("Item was not found in this room");}
+                    handlePlayerTake(itemTake);
                     break;
                 case "drop":
                     System.out.println("Please enter the name of the item you want to drop");
                     String itemDrop = sc.nextLine().toLowerCase();
-                    if (adventure.player.dropItem(itemDrop)) {System.out.println("Item removed from inventory");}
-                    else {System.out.println("Item was not found in your inventory");}
+                    handlePlayerDrop(itemDrop);
+                    break;
+                case "health", "h":
+                    showHealthPoints();
+                    break;
+                case "eat":
+                    System.out.println("Please enter the name of the food source");
+                    String foodEat = sc.nextLine().toLowerCase();
+                    handlePlayerEat(foodEat);
                     break;
                 case "exit":
                     System.out.println("Ending adventure..");
@@ -106,6 +121,49 @@ public class UserInterface {
         }
         for (Item item : adventure.player.getInventoryList()) {
             System.out.println(item.getItemName());
+        }
+    }
+
+    public void handlePlayerTake (String itemTake) {
+        if (adventure.player.takeItem(itemTake)) {
+            System.out.println("Item added to inventory");
+        }
+        else {
+            System.out.println("Item was not found in this room");
+        }
+    }
+
+    public void handlePlayerDrop (String itemDrop) {
+        if (adventure.player.dropItem(itemDrop)) {
+            System.out.println("Item removed from inventory");
+        }
+        else {
+            System.out.println("Item was not found in your inventory");
+        }
+    }
+
+    public void showHealthPoints () {
+        int health = adventure.player.food.getHealthPoints();
+        if (health > 50) {
+            System.out.println("Health points: " + health + ", you are in good shape.");
+        }
+        else if (health <= 50 && health > 10) {
+            System.out.println("Health points: " + health + ", you are injured and should heal your wounds.");
+        }
+        else if (health < 10 && health > 0){
+            System.out.println("Health points: " + health + ", you are in critical condition, seek help immediately");
+        }
+    }
+
+    public void handlePlayerEat (String foodEat) {
+        if (adventure.player.eatItem(foodEat)) {
+            System.out.println("You ate and gained: " + adventure.player.food.getFoodHeal() + "HP \n" + "You now have: " + adventure.player.food.getHealthPoints() + " health points");
+        }
+        else if (adventure.player.getCurrentRoom().findItem(foodEat) == null) {
+            System.out.println("Item was not found..");
+        }
+        else if (!adventure.player.itemEdibleRoom(foodEat) || !adventure.player.itemEdibleInventory(foodEat)) {
+            System.out.println("Item is not edible");
         }
     }
 }

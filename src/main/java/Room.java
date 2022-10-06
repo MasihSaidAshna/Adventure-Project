@@ -8,7 +8,7 @@ public class Room {
     private Room west;
     private Room south;
 
-    //Et arraylist som er genstandene i rummene
+    //Et arraylist som indeholder genstande i rummene
     private ArrayList<Item> items = new ArrayList<>();
 
     //Konstruktør
@@ -69,6 +69,11 @@ public class Room {
 
     public void addItemToRoom (String itemName) {
         items.add(new Item(itemName));
+    }
+
+    public void addFoodToRoom (String foodName, int heal) {
+        Item food = new Food(foodName, heal);
+        items.add(food);
     }
 
     public ArrayList<Item> getItemList () {
