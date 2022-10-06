@@ -157,7 +157,7 @@ public class UserInterface {
 
     public void handlePlayerEat (String foodEat) {
         if (adventure.player.eatItem(foodEat)) {
-            System.out.println("You ate and gained: " + adventure.player.food.getFoodHeal() + "HP \n" + "You now have: " + adventure.player.food.getHealthPoints() + " health points");
+            System.out.println("You ate and gained: " + adventure.player.food.getFoodHealthPoints() + "HP \n" + "You now have: " + adventure.player.food.getHealthPoints() + " health points");
         }
         else if (adventure.player.getCurrentRoom().findItem(foodEat) == null) {
             System.out.println("Item was not found..");

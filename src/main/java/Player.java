@@ -7,8 +7,8 @@ public class Player {
 
     private ArrayList<Item> inventory = new ArrayList<>(); //Arraylist som er player's inventory
 
-    private int foodHeal;
-    Food food = new Food("food", foodHeal);
+    private int foodHealthPoints;
+    Food food = new Food("food", foodHealthPoints);
 
     public Room getCurrentRoom() {
         return currentRoom;
@@ -156,8 +156,8 @@ public class Player {
                 if (itemFood.getItemName().equals(foodName)) {
                     currentRoom.removeItem(itemFood);
                     Food foodItem = (Food)itemFood;
-                    food.setFoodHeal(foodItem.getFoodHeal());
-                    food.setHealthPoints(food.getHealthPoints() + foodItem.getFoodHeal());
+                    food.setFoodHealthPoints(foodItem.getFoodHealthPoints());
+                    food.setHealthPoints(food.getHealthPoints() + foodItem.getFoodHealthPoints());
                     return true;
                 }
         }
@@ -167,8 +167,8 @@ public class Player {
                 if (itemFood.getItemName().equals(foodName)) {
                     inventory.remove(itemFood);
                     Food foodItem = (Food)itemFood;
-                    food.setFoodHeal(foodItem.getFoodHeal());
-                    food.setHealthPoints(food.getHealthPoints() + foodItem.getFoodHeal());
+                    food.setFoodHealthPoints(foodItem.getFoodHealthPoints());
+                    food.setHealthPoints(food.getHealthPoints() + foodItem.getFoodHealthPoints());
                     return true;
                 }
             }
