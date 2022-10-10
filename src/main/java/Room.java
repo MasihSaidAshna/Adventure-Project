@@ -18,13 +18,6 @@ public class Room {
     }
 
     //Set metoder
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public void setNorth(Room north) {
         this.north = north;
@@ -76,13 +69,13 @@ public class Room {
         items.add(food);
     }
 
-    public void addMeleeToRoom (String meleeName) {
-        Item weapon = new MeleeWeapon(meleeName);
+    public void addMeleeToRoom (String meleeName, String weaponType) {
+        Item weapon = new MeleeWeapon(meleeName, weaponType);
         items.add(weapon);
     }
 
-    public void addRangedToRoom (String rangedName, int ammo) {
-        Item weapon = new RangedWeapon(rangedName, ammo);
+    public void addRangedToRoom (String rangedName, String weaponType, int ammo) {
+        Item weapon = new RangedWeapon(rangedName, weaponType, ammo);
         items.add(weapon);
     }
 
@@ -95,14 +88,6 @@ public class Room {
         items.remove(item);
     }
 
-    public String getItem (String itemName){
-        for (Item item : items) {
-            if (item.getItemName().equals(itemName)) {
-                items.add(item);
-            }
-        }
-        return null;
-    }
     public Item findItem (String itemName){
         for (Item item : items) {
             if (item.getItemName().equals(itemName)) {

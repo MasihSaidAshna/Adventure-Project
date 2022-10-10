@@ -2,24 +2,16 @@ public class RangedWeapon extends Weapon{
 
     private int ammunition;
 
-    public RangedWeapon(String itemName, int ammunition) {
-        super(itemName);
+    public RangedWeapon(String itemName, String weaponType, int ammunition) {
+        super(itemName, weaponType);
         this.ammunition = ammunition;
     }
 
-    /*public boolean checkRangedType(Item item) {
-        boolean checkWeapon = false;
-        if (this.getItemName().equals(item.getItemName())){
-            checkWeapon = true;
-        }
-        return checkWeapon;
-    }*/
+    @Override
+    public Integer getAmmunition() {return ammunition;}
 
-
-    public int getAmmunition() {return ammunition;}
-
+    @Override
     public void setRangedAmmunition (int ammunition) {
         this.ammunition = ammunition;
     }
-
 }

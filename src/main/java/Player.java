@@ -22,6 +22,10 @@ public class Player {
         return currentWeapon;
     }
 
+    public void setCurrentWeapon(Item currentWeapon) {
+        this.currentWeapon = currentWeapon;
+    }
+
     public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
     }
@@ -68,14 +72,18 @@ public class Player {
         }
     }
 
+
     public Item findItemInv(String itemName) {
-        for (Item item : inventory) {
+        Item itemVar = null;
+        for (int i = 0; i < inventory.size(); i++ /*Item item : inventory*/) {
+            Item item = inventory.get(i);
             if (item.getItemName().equals(itemName)) {
-                return item;
+                itemVar = item;
             }
         }
-        return null;
+        return itemVar;
     }
+
 
     public boolean takeItem(String itemName) {
         boolean isNull = false;
@@ -88,15 +96,14 @@ public class Player {
         return isNull;
     }
 
+
     public boolean dropItem(String itemName) {
         boolean isNull = false;
-        for (int i = 0; i < getInventoryList().size(); i++) {
-            Item item = getInventoryList().get(i);
-            if (item.getItemName().equals(itemName)) {
-                inventory.remove(item);
-                currentRoom.getItemList().add(item);
-                isNull = true;
-            }
+        Item item = findItemInv(itemName);
+        if (item.getItemName().equals(itemName)) {
+            inventory.remove(item);
+            currentRoom.getItemList().add(item);
+            isNull = true;
         }
         return isNull;
     }
@@ -106,25 +113,18 @@ public class Player {
         Item item = currentRoom.findItem(itemName);
         if (item instanceof Food) {
             eatOrNot = true;
-        } /*else if (item == null) {
-            eatOrNot = false;
-        }*/
+        }
         return eatOrNot;
     }
 
+
     public boolean itemEdibleInventory(String itemName) {
         boolean eatOrNot = false;
-        for (int i = 0; i < getInventoryList().size(); i++) {
-            Item item = inventory.get(i);
-            if (item.getItemName().equals(itemName)) {
-                if (item instanceof Food) {
-                    eatOrNot = true;
-                }
+        Item item = findItemInv(itemName);
+        if (item.getItemName().equals(itemName)) {
+            if (item instanceof Food) {
+                eatOrNot = true;
             }
-            /*else if (item == null) {
-                //eatOrNot = false;
-                eatOrNot = false;
-            }*/
         }
         return eatOrNot;
     }
@@ -134,23 +134,19 @@ public class Player {
         boolean eatFood = false;
         if (itemEdibleRoom(foodName)) {
             Item itemFood = currentRoom.findItem(foodName);
-            //if (itemFood.getItemName().equals(foodName)) {
             currentRoom.removeItem(itemFood);
             Food foodItem = (Food) itemFood;
             food.setFoodHealthPoints(foodItem.getFoodHealthPoints());
             food.setHealthPoints(food.getHealthPoints() + foodItem.getFoodHealthPoints());
             eatFood = true;
-            //}
         } else if (itemEdibleInventory(foodName)) {
-            for (int i = 0; i < inventory.size(); i++) {
-                Item itemFood = inventory.get(i);
-                if (itemFood.getItemName().equals(foodName)) {
-                    inventory.remove(itemFood);
-                    Food foodItem = (Food) itemFood;
-                    food.setFoodHealthPoints(foodItem.getFoodHealthPoints());
-                    food.setHealthPoints(food.getHealthPoints() + foodItem.getFoodHealthPoints());
-                    eatFood = true;
-                }
+            Item itemFood = findItemInv(foodName);
+            if (itemFood.getItemName().equals(foodName)) {
+                inventory.remove(itemFood);
+                Food foodItem = (Food) itemFood;
+                food.setFoodHealthPoints(foodItem.getFoodHealthPoints());
+                food.setHealthPoints(food.getHealthPoints() + foodItem.getFoodHealthPoints());
+                eatFood = true;
             }
         }
         return eatFood;
@@ -158,16 +154,10 @@ public class Player {
 
     public boolean equipWeapon(String weaponName) {
         boolean isWeapon = false;
-        Item weaponItemRoom = currentRoom.findItem(weaponName);
-        Item weaponItemInv = findItemInv(weaponName);
+        Item itemInv = findItemInv(weaponName);
         try {
-            if (weaponItemRoom.getClass() == MeleeWeapon.class || weaponItemRoom.getClass() == RangedWeapon.class) {
-                currentWeapon = weaponItemRoom;
-                currentRoom.getItemList().remove(weaponItemRoom);
-                inventory.add(weaponItemRoom);
-                isWeapon = true;
-            } else if (weaponItemInv.getClass() == MeleeWeapon.class || weaponItemInv.getClass() == RangedWeapon.class) {
-                currentWeapon = weaponItemInv;
+            if (itemInv instanceof Weapon) {
+                setCurrentWeapon(itemInv);
                 isWeapon = true;
             }
         }
@@ -180,17 +170,16 @@ public class Player {
     public boolean playerAttack (/*String targetName*/) {
         boolean hitSuccessful = false;
         if (getCurrentWeapon() != null){
-            if (getCurrentWeapon().getClass() == MeleeWeapon.class){
+            Weapon CW = (Weapon) currentWeapon;
+            if (CW.getWeaponType().equals("melee")) {
                 hitSuccessful = true;
-            } else if (getCurrentWeapon().getClass() == RangedWeapon.class) {
-                RangedWeapon rangedWeapon = (RangedWeapon)getCurrentWeapon();
-                if (rangedWeapon.getAmmunition() > 0) {
-                    rangedWeapon.setRangedAmmunition(rangedWeapon.getAmmunition()-1);
-                    hitSuccessful = true;
-                }
-                else {
-                    hitSuccessful = false;
-                }
+            }
+            else if (CW.getWeaponType().equals("ranged")) {
+                CW.setRangedAmmunition(CW.getAmmunition()-1);
+                hitSuccessful = true;
+            }
+            else {
+                hitSuccessful = false;
             }
         }
         return hitSuccessful;

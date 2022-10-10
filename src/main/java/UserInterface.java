@@ -64,7 +64,6 @@ public class UserInterface {
                     System.out.println("Please enter the name of the item you want to take");
                     String itemTake = sc.nextLine().toLowerCase();
                     handlePlayerTake(itemTake);
-                    handlePlayerTake(userInput);
                     break;
                 case "drop":
                     System.out.println("Please enter the name of the item you want to drop");
@@ -129,8 +128,11 @@ public class UserInterface {
         if (adventure.player.getInventoryList().isEmpty()) {
             System.out.println("Inventory is empty");
         }
-        for (Item item : adventure.player.getInventoryList()) {
-            System.out.println("Currently equipped " + adventure.player.getCurrentWeapon() + "\n" + item.getItemName());
+        else {
+            checkEquippedWeapon(adventure.player.getCurrentWeapon());
+            for (Item item : adventure.player.getInventoryList()) {
+                System.out.println(item.getItemName());
+            }
         }
     }
 
@@ -185,7 +187,7 @@ public class UserInterface {
         if (adventure.player.equipWeapon(weaponName)){
             System.out.println("Weapon equipped: " + adventure.player.getCurrentWeapon());
         }
-        else if (adventure.player.getCurrentRoom().findItem(weaponName) == null && adventure.player.findItemInv(weaponName) == null){
+        else if (adventure.player.findItemInv(weaponName) == null){
             System.out.println("Item does not exist ");
         }
         else {
@@ -193,18 +195,27 @@ public class UserInterface {
         }
     }
 
+    public void checkEquippedWeapon (Item item) {
+        if (item != null) {
+            System.out.println("Currently equipped " + adventure.player.getCurrentWeapon());
+        }
+        else {System.out.println("No weapon equipped");}
+    }
+
     public void handlePlayerAttack () {
         if (adventure.player.playerAttack()){
-            if (adventure.player.getCurrentWeapon().getClass() == MeleeWeapon.class) {
+            Weapon CW = (Weapon) adventure.player.getCurrentWeapon();
+            if (CW.getWeaponType().equals("melee")) {
                 System.out.println("Swung in the air with " + adventure.player.getCurrentWeapon() + "!");
             }
-            else if (adventure.player.getCurrentWeapon().getClass() == RangedWeapon.class) {
-                RangedWeapon rangedWeapon = (RangedWeapon) adventure.player.getCurrentWeapon();
+            else if (CW.getWeaponType().equals("ranged")) {
+                RangedWeapon rangedWeapon = (RangedWeapon) CW;
+                //RangedWeapon rangedWeapon = (RangedWeapon) adventure.player.getCurrentWeapon();
                 if (rangedWeapon.getAmmunition() == 0) {
                     System.out.println("You have no ammo!");
                 }
                 else if (rangedWeapon.getAmmunition() == 1) {
-                    System.out.println("You shoot your last shot with " + rangedWeapon + "!\n Ammo left: " + rangedWeapon.getAmmunition());
+                    System.out.println("You shoot your last shot with " + rangedWeapon + "!\nAmmo left: " + rangedWeapon.getAmmunition());
                 }
                 else if (rangedWeapon.getAmmunition() > 1) {
                     System.out.println("Shot the air with " + rangedWeapon + "!\n Ammo left: " + rangedWeapon.getAmmunition());
