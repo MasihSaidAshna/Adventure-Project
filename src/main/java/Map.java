@@ -46,12 +46,13 @@ public class Map {
         room1.addFoodToRoom( "bread", 10);
         room2.addItemToRoom( "torch");
         room2.addItemToRoom( "coin");
-        room3.addItemToRoom("rusty sword");
+        room3.addMeleeToRoom("rusty sword");
+        room3.addRangedToRoom("longbow", 5);
         room3.addFoodToRoom("rotten meat", -20);
         room4.addItemToRoom("shoes");
         room5.addItemToRoom("treasure chest");
         room5.addFoodToRoom("bottle of wine", 20);
-        room7.addItemToRoom("shield");
+        room7.addMeleeToRoom("shield");
         room7.addFoodToRoom("rat poison", -100);
         room9.addItemToRoom("spiders");
         room9.addFoodToRoom("spider eggs", -40);

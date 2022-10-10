@@ -64,6 +64,7 @@ public class UserInterface {
                     System.out.println("Please enter the name of the item you want to take");
                     String itemTake = sc.nextLine().toLowerCase();
                     handlePlayerTake(itemTake);
+                    handlePlayerTake(userInput);
                     break;
                 case "drop":
                     System.out.println("Please enter the name of the item you want to drop");
@@ -78,12 +79,21 @@ public class UserInterface {
                     String foodEat = sc.nextLine().toLowerCase();
                     handlePlayerEat(foodEat);
                     break;
+                case "equip":
+                    System.out.println("Enter the name of the weapon to equip");
+                    String itemEquip = sc.nextLine().toLowerCase();
+                    handlePlayerEquip(itemEquip);
+                    break;
+                case "attack":
+                    handlePlayerAttack();
+                    break;
                 case "exit":
                     System.out.println("Ending adventure..");
                     gameRunning = false;
             }
         }
     }
+
 
     public void lookRoom(Room room) { //Method used for the "look" command
         String roomDetails;
@@ -120,7 +130,7 @@ public class UserInterface {
             System.out.println("Inventory is empty");
         }
         for (Item item : adventure.player.getInventoryList()) {
-            System.out.println(item.getItemName());
+            System.out.println("Currently equipped " + adventure.player.getCurrentWeapon() + "\n" + item.getItemName());
         }
     }
 
@@ -150,8 +160,12 @@ public class UserInterface {
         else if (health <= 50 && health > 10) {
             System.out.println("Health points: " + health + ", you are injured and should heal your wounds.");
         }
-        else if (health < 10 && health > 0){
+        else if (health <= 10 && health > 0){
             System.out.println("Health points: " + health + ", you are in critical condition, seek help immediately");
+        }
+        else if (health <= 0){
+            gameRunning = false;
+            System.out.println("YOU DIED");
         }
     }
 
@@ -166,4 +180,40 @@ public class UserInterface {
             System.out.println("Item is not edible");
         }
     }
+
+    public void handlePlayerEquip (String weaponName) {
+        if (adventure.player.equipWeapon(weaponName)){
+            System.out.println("Weapon equipped: " + adventure.player.getCurrentWeapon());
+        }
+        else if (adventure.player.getCurrentRoom().findItem(weaponName) == null && adventure.player.findItemInv(weaponName) == null){
+            System.out.println("Item does not exist ");
+        }
+        else {
+            System.out.println("Item can't be equipped");
+        }
+    }
+
+    public void handlePlayerAttack () {
+        if (adventure.player.playerAttack()){
+            if (adventure.player.getCurrentWeapon().getClass() == MeleeWeapon.class) {
+                System.out.println("Swung in the air with " + adventure.player.getCurrentWeapon() + "!");
+            }
+            else if (adventure.player.getCurrentWeapon().getClass() == RangedWeapon.class) {
+                RangedWeapon rangedWeapon = (RangedWeapon) adventure.player.getCurrentWeapon();
+                if (rangedWeapon.getAmmunition() == 0) {
+                    System.out.println("You have no ammo!");
+                }
+                else if (rangedWeapon.getAmmunition() == 1) {
+                    System.out.println("You shoot your last shot with " + rangedWeapon + "!\n Ammo left: " + rangedWeapon.getAmmunition());
+                }
+                else if (rangedWeapon.getAmmunition() > 1) {
+                    System.out.println("Shot the air with " + rangedWeapon + "!\n Ammo left: " + rangedWeapon.getAmmunition());
+                }
+            }
+        }
+        else {
+            System.out.println("Cant attack with no weapon equipped!");
+        }
+    }
+
 }
