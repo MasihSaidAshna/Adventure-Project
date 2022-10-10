@@ -11,6 +11,8 @@ public class Room {
     //Et arraylist som indeholder genstande i rummene
     private ArrayList<Item> items = new ArrayList<>();
 
+    private ArrayList<Enemy> enemies = new ArrayList<>();
+
     //Konstruktør
     public Room(String name, String description) {
         this.name = name;
