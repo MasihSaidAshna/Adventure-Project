@@ -1,5 +1,3 @@
-import org.w3c.dom.ranges.Range;
-
 import java.util.*;
 
 public class Player {
@@ -167,19 +165,24 @@ public class Player {
         return isWeapon;
     }
 
-    public boolean playerAttack (/*String targetName*/) {
+    public boolean playerAttack (String targetName) {
         boolean hitSuccessful = false;
         if (getCurrentWeapon() != null){
             Weapon CW = (Weapon) currentWeapon;
-            if (CW.getWeaponType().equals("melee")) {
-                hitSuccessful = true;
-            }
-            else if (CW.getWeaponType().equals("ranged")) {
-                CW.setRangedAmmunition(CW.getAmmunition()-1);
-                hitSuccessful = true;
-            }
-            else {
-                hitSuccessful = false;
+            for (int i = 0; i < currentRoom.getEnemies().size(); i++) {
+                Enemy enemy = currentRoom.getEnemies().get(i);
+                if (enemy.getEnemyName().equals(targetName)){
+                    if (CW.getWeaponType().equals("melee")) {
+                        hitSuccessful = true;
+                    }
+                    else if (CW.getWeaponType().equals("ranged")) {
+                        CW.setRangedAmmunition(CW.getAmmunition()-1);
+                        hitSuccessful = true;
+                    }
+                    else {
+                        hitSuccessful = false;
+                    }
+                }
             }
         }
         return hitSuccessful;

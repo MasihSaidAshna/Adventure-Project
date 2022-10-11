@@ -43,7 +43,7 @@ public class UserInterface {
                     handleRoomDirection(goSouth);
                     break;
                 case "look":
-                    lookRoom(adventure.player.getCurrentRoom());
+                    System.out.println("You are in " + lookRoom(adventure.player.getCurrentRoom()));
                     break;
                 case "help":
                     System.out.println("""
@@ -84,7 +84,9 @@ public class UserInterface {
                     handlePlayerEquip(itemEquip);
                     break;
                 case "attack":
-                    handlePlayerAttack();
+                    System.out.println("Enter the name of the enemy you want to attack");
+                    String enemyName = sc.nextLine().toLowerCase();
+                    handlePlayerAttack(enemyName);
                     break;
                 case "exit":
                     System.out.println("Ending adventure..");
@@ -94,35 +96,31 @@ public class UserInterface {
     }
 
 
-    public void lookRoom(Room room) { //Method used for the "look" command
-        String roomDetails;
+    public String lookRoom(Room room) { //Method used for the "look" command
+        String roomDetails = room.toString();
         if (room.getItemList().isEmpty()) {
-            roomDetails = room.getName() + "\n" + room.getDescription() + "\n" +  "Room is empty!";
+            if (room.getEnemies().isEmpty()) {
+                roomDetails = room.getName() + "\n" + room.getDescription() + "\n" +  "Room is empty!";
+            }
+            else {
+                roomDetails = room.getName() + "\n" + room.getDescription() + "\n" + room.getEnemies() + "\n" +  "Room is empty!";
+            }
         }
-        else {
-            roomDetails = room.toString();
+        if (room.getEnemies().isEmpty()) {
+            roomDetails = room.getName() + "\n" + room.getDescription() + "\n" + room.getItemList() + "\n" + "No enemies around";
         }
-        System.out.println("You are in " + roomDetails);
+        return roomDetails;
     }
+
 
     public void handleRoomDirection(boolean goDirection) {
         if (goDirection) {
-            System.out.println("You are going to " + showRoomItems(adventure.player.getCurrentRoom()));
+            System.out.println("You are going to " + lookRoom(adventure.player.getCurrentRoom()));
         } else {
             System.out.println("You cannot go this way");
         }
     }
 
-    public String showRoomItems(Room room) { //Method used by handleRoomDirection
-        String roomDetails;
-        if (room.getItemList().isEmpty()) {
-            roomDetails = room.getName() + "\n" + room.getDescription() + "\n" +  "Room is empty!";
-        }
-        else {
-            roomDetails = room.toString();
-        }
-        return roomDetails;
-    }
 
     public void showPlayerItems () {
         if (adventure.player.getInventoryList().isEmpty()) {
@@ -202,15 +200,14 @@ public class UserInterface {
         else {System.out.println("No weapon equipped");}
     }
 
-    public void handlePlayerAttack () {
-        if (adventure.player.playerAttack()){
+    public void handlePlayerAttack (String targetName) {
+        if (adventure.player.playerAttack(targetName)){
             Weapon CW = (Weapon) adventure.player.getCurrentWeapon();
             if (CW.getWeaponType().equals("melee")) {
                 System.out.println("Swung in the air with " + adventure.player.getCurrentWeapon() + "!");
             }
             else if (CW.getWeaponType().equals("ranged")) {
                 RangedWeapon rangedWeapon = (RangedWeapon) CW;
-                //RangedWeapon rangedWeapon = (RangedWeapon) adventure.player.getCurrentWeapon();
                 if (rangedWeapon.getAmmunition() == 0) {
                     System.out.println("You have no ammo!");
                 }

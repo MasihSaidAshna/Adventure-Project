@@ -71,20 +71,28 @@ public class Room {
         items.add(food);
     }
 
-    public void addMeleeToRoom (String meleeName, String weaponType) {
-        Item weapon = new MeleeWeapon(meleeName, weaponType);
+    public void addMeleeToRoom (String meleeName, String weaponType, int weaponDamage) {
+        Item weapon = new MeleeWeapon(meleeName, weaponType, weaponDamage);
         items.add(weapon);
     }
 
-    public void addRangedToRoom (String rangedName, String weaponType, int ammo) {
-        Item weapon = new RangedWeapon(rangedName, weaponType, ammo);
+    public void addRangedToRoom (String rangedName, String weaponType, int ammo, int weaponDamage) {
+        Item weapon = new RangedWeapon(rangedName, weaponType, ammo, weaponDamage);
         items.add(weapon);
+    }
+
+    public void addEnemyToRoom (String enemyName, String description, int enemyHealth, Weapon weapon){
+        Enemy enemy = new Enemy(enemyName, description, enemyHealth, weapon);
+        enemies.add(enemy);
     }
 
     public ArrayList<Item> getItemList () {
         return items;
     }
 
+    public ArrayList<Enemy> getEnemies() {
+        return enemies;
+    }
 
     public void removeItem (Item item) {
         items.remove(item);
@@ -101,7 +109,7 @@ public class Room {
 
     @Override
     public String toString() { //Udskriver navn på room, beskrivelse og items i rummet
-        return name + "\n" + description + "\n" + "Items: " + items + " \n";
+        return name + "\n" + description + "\n" + "There is: " + enemies + "\n" + "You spot Items: " + items + " \n";
     }
 }
 
