@@ -1,5 +1,6 @@
 public class Map {
 
+    //Skaber rum objekter
     Room room1 = new Room("Room 1 ", "You stand at the entrance to dark, grim looking halls.. dare you enter? \nYou see doors to the East & South");
     Room room2 = new Room("Room 2 ", "Room containing belongings to past adventurers, you see doors to the East & West");
     Room room3 = new Room("Room 3 ", "Looks like an old armory, you see doors to the West & South");
@@ -10,10 +11,11 @@ public class Map {
     Room room8 = new Room("Room 8 ", "Room with no distinct features, East & West & North");
     Room room9 = new Room("Room 9 ", "Room filled with cobwebs.. you feel uneasy. You see North & West");
 
-    RangedWeapon banditWeapon = new RangedWeapon("crossbow", "ranged", 5, 20);
-    MeleeWeapon minotaurWeapon = new MeleeWeapon("Bloody warhammer", "melee", 25);
-    MeleeWeapon livingArmorWeapon = new MeleeWeapon("Spectral longsword","melee",30);
-    MeleeWeapon enemySpiderWeapon = new MeleeWeapon("Moonlight Greatsword", "melee", 35);
+    //Skaber fjende våben objekter
+    RangedWeapon banditWeapon = new RangedWeapon("crossbow", "ranged", 5, 15);
+    MeleeWeapon minotaurWeapon = new MeleeWeapon("Bloody warhammer", "melee", 20);
+    MeleeWeapon livingArmorWeapon = new MeleeWeapon("Spectral longsword","melee",25);
+    MeleeWeapon enemySpiderWeapon = new MeleeWeapon("Moonlight Greatsword", "melee", 30);
 
     public Map() {
 
@@ -55,23 +57,27 @@ public class Map {
         room9.addItemToRoom("spiders");
 
         //Tilføjer mad til rum
-        room1.addFoodToRoom( "healing potion", 50);
+        room1.addFoodToRoom( "bread", 10);
+        room1.addFoodToRoom( "pineapple", 20);
+        room2.addFoodToRoom("healing potion", 50);
         room3.addFoodToRoom("rotten meat", -20);
         room5.addFoodToRoom("bottle of wine", 20);
         room7.addFoodToRoom("rat poison", -100);
         room9.addFoodToRoom("spider eggs", -40);
 
         //Tilføjer våben til rum med navne, våbentype og skade
-        room2.addMeleeToRoom("iron dagger","melee",5);
-        room3.addMeleeToRoom("rusty sword", "melee", 10);
-        room3.addRangedToRoom("longbow", "ranged", 5, 15);
+        room2.addMeleeToRoom("iron dagger","melee",10);
+        room3.addMeleeToRoom("rusty sword", "melee", 1);
+        room3.addRangedToRoom("longbow", "ranged", 5, 12);
         room7.addMeleeToRoom("shield", "melee", 10);
+        room7.addRangedToRoom("greatbow", "ranged",1,30);
+        room8.addMeleeToRoom("royal lance","melee",20);
 
         //Tilføjer fjender til rum med relevante parametrer
         room3.addEnemyToRoom("bandit", "This brigand seems to have been through many battles before", 50, banditWeapon);
         room7.addEnemyToRoom("minotaur","A monstrosity shaped half like a man and half like a bull, confined in this dungeon",75, minotaurWeapon);
         room8.addEnemyToRoom("living armor","This entity seems to have nothing inside its armor, controlled by forces unknown",80, livingArmorWeapon);
-        room9.addEnemyToRoom("eldritch spider", "A star-spawned horror, abominable beyond human understanding", 125, enemySpiderWeapon);
+        room9.addEnemyToRoom("eldritch spider", "A star-spawned horror, abominable beyond human understanding", 100, enemySpiderWeapon);
 
     }
 

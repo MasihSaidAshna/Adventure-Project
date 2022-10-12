@@ -1,6 +1,6 @@
 public class Food extends Item {
 
-    private int healthPoints = 100;
+    private int healthPoints;
 
     private int foodHealthPoints;
 

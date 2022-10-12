@@ -8,9 +8,10 @@ public class Room {
     private Room west;
     private Room south;
 
-    //Et arraylist som indeholder genstande i rummene
+    //Arraylist som indeholder genstande til rummene
     private ArrayList<Item> items = new ArrayList<>();
 
+    //Arraylist som indeholder fjender der forholder sig i rummene
     private ArrayList<Enemy> enemies = new ArrayList<>();
 
     //Konstruktør
@@ -20,10 +21,7 @@ public class Room {
     }
 
     //Set metoder
-
-    public void setNorth(Room north) {
-        this.north = north;
-    }
+    public void setNorth(Room north) { this.north = north; }
 
     public void setEast(Room east) {
         this.east = east;
@@ -62,6 +60,15 @@ public class Room {
         return south;
     }
 
+    public ArrayList<Item> getItemList () {
+        return items;
+    }
+
+    public ArrayList<Enemy> getEnemies() {
+        return enemies;
+    }
+
+    //Tilføjer item til room
     public void addItemToRoom (String itemName) {
         items.add(new Item(itemName));
     }
@@ -84,14 +91,6 @@ public class Room {
     public void addEnemyToRoom (String enemyName, String description, int enemyHealth, Weapon weapon){
         Enemy enemy = new Enemy(enemyName, description, enemyHealth, weapon);
         enemies.add(enemy);
-    }
-
-    public ArrayList<Item> getItemList () {
-        return items;
-    }
-
-    public ArrayList<Enemy> getEnemies() {
-        return enemies;
     }
 
     public void removeItem (Item item) {

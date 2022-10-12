@@ -5,14 +5,14 @@ public class Player {
     Map map = new Map();
     private Room currentRoom = map.getStarterRoom(); //Initialiserer currentRoom som starterRoom.
 
-    private Item currentWeapon;
+    private Item currentWeapon; //Brugerens nuværene våben
 
-    private ArrayList<Item> inventory = new ArrayList<>(); //Arraylist som er player's inventory
+    private ArrayList<Item> inventory = new ArrayList<>(); //Arraylist som er spillerens inventory
 
-    private boolean didPlayerAttack;
-    private int foodHealthPoints;
-    Food food = new Food("food", foodHealthPoints);
+    private boolean didPlayerAttack; //Attribut som bruges i handleEnemyAttack i userinterface klassen
+    Food food = new Food("",0);
 
+    //Get metoder til nuværende rum, våben og inventory
     public Room getCurrentRoom() {
         return currentRoom;
     }
@@ -20,15 +20,6 @@ public class Player {
     public Item getCurrentWeapon() {
         return currentWeapon;
     }
-
-    public void setCurrentWeapon(Item currentWeapon) {
-        this.currentWeapon = currentWeapon;
-    }
-
-    public void setCurrentRoom(Room currentRoom) {
-        this.currentRoom = currentRoom;
-    }
-
 
     public ArrayList<Item> getInventoryList() {
         return inventory;
@@ -38,7 +29,16 @@ public class Player {
         return didPlayerAttack;
     }
 
-    //Metode til at flytte forskellige retninger
+    //Set metoder til nuværende rum og våben
+    public void setCurrentWeapon(Item currentWeapon) {
+        this.currentWeapon = currentWeapon;
+    }
+
+    public void setCurrentRoom(Room currentRoom) {
+        this.currentRoom = currentRoom;
+    }
+
+    //Metoder til at flytte forskellige retninger
     public boolean goNorth() {
         if (currentRoom.getNorth() == null) {
             return false;
@@ -75,42 +75,42 @@ public class Player {
         }
     }
 
-
+    //Finder et item i spillerens inventory
     public Item findItemInv(String itemName) {
-        Item itemVar = null;
-        for (int i = 0; i < inventory.size(); i++ /*Item item : inventory*/) {
+        Item itemInv = null;
+        for (int i = 0; i < inventory.size(); i++) {
             Item item = inventory.get(i);
             if (item.getItemName().equals(itemName)) {
-                itemVar = item;
+                itemInv = item;
             }
         }
-        return itemVar;
+        return itemInv;
     }
 
 
     public boolean takeItem(String itemName) {
-        boolean isNull = false;
+        boolean itemTaken = false;
         Item item = currentRoom.findItem(itemName);
         if (item != null) {
             inventory.add(item);
             currentRoom.removeItem(item);
-            isNull = true;
+            itemTaken = true;
         }
-        return isNull;
+        return itemTaken;
     }
-
 
     public boolean dropItem(String itemName) {
-        boolean isNull = false;
+        boolean itemDrop = false;
         Item item = findItemInv(itemName);
-        if (item.getItemName().equals(itemName)) {
+        if (item != null) {
             inventory.remove(item);
             currentRoom.getItemList().add(item);
-            isNull = true;
+            itemDrop = true;
         }
-        return isNull;
+        return itemDrop;
     }
 
+    //Tjekker om et item i rummet er spiseligt
     public boolean itemEdibleRoom(String itemName) {
         boolean eatOrNot = false;
         Item item = currentRoom.findItem(itemName);
@@ -120,19 +120,17 @@ public class Player {
         return eatOrNot;
     }
 
-
+    //Tjekker om et item i inventory er spiseligt
     public boolean itemEdibleInventory(String itemName) {
         boolean eatOrNot = false;
         Item item = findItemInv(itemName);
-        if (item.getItemName().equals(itemName)) {
-            if (item instanceof Food) {
-                eatOrNot = true;
-            }
+        if (item instanceof Food) {
+            eatOrNot = true;
         }
         return eatOrNot;
     }
 
-
+    //Tilføjer eller reducerer liv til spilleren når de spiser noget
     public boolean eatItem(String foodName) {
         boolean eatFood = false;
         if (itemEdibleRoom(foodName)) {
@@ -155,6 +153,7 @@ public class Player {
         return eatFood;
     }
 
+    //Armerer spilleren med et validt item
     public boolean equipWeapon(String weaponName) {
         boolean isWeapon = false;
         Item itemInv = findItemInv(weaponName);
@@ -165,38 +164,29 @@ public class Player {
             }
         }
         catch (Exception e) {
-            isWeapon = Boolean.parseBoolean(null);
+            isWeapon = false;
         }
         return isWeapon;
     }
 
+    //Boolean metode som returnerer true hvis spilleren kan angribe målet
     public boolean playerAttack (String targetName) {
         boolean hitSuccessful = false;
         if (getCurrentWeapon() != null){
             Weapon CW = (Weapon) currentWeapon;
             Enemy enemy = currentRoom.findEnemy(targetName);
             try {
-                if (enemy.getEnemyName().equals(targetName)) {
-                    if (enemy.getEnemyHealth() > 0) {
-                        if (CW.getWeaponType().equals("melee")) {
+                if (enemy.getEnemyName().equals(targetName) && enemy.getEnemyHealth() > 0) {
+                    if (CW.getWeaponType().equals("melee")) {
+                        enemy.setEnemyHealth(enemy.getEnemyHealth() - CW.getWeaponDamage());
+                        didPlayerAttack = true;
+                        hitSuccessful = true;
+                    } else if (CW.getWeaponType().equals("ranged")) {
+                        if (CW.getAmmunition() > 0) {
                             enemy.setEnemyHealth(enemy.getEnemyHealth() - CW.getWeaponDamage());
                             didPlayerAttack = true;
                             hitSuccessful = true;
-                        } else if (CW.getWeaponType().equals("ranged")) {
-                            if (CW.getAmmunition() > 0) {
-                                enemy.setEnemyHealth(enemy.getEnemyHealth() - CW.getWeaponDamage());
-                                CW.setRangedAmmunition(CW.getAmmunition() - 1);
-                                didPlayerAttack = true;
-                                hitSuccessful = true;
-                            }
-                            else {
-                                hitSuccessful = false;
-                            }
-                        } else {
-                            hitSuccessful = false;
                         }
-                    } else {
-                        hitSuccessful = false;
                     }
                 }
             }

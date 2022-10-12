@@ -19,6 +19,7 @@ public class UserInterface {
                 _____________________________________________________________________
                     """);
 
+        adventure.player.food.setHealthPoints(100); //Initialiserer player's liv med 100 health points
         while (gameRunning) { //While loop som inderholder en switch case, som kører så længe gameRunning er true
             String userInput = sc.nextLine().toLowerCase();
             switch (userInput) {
@@ -50,9 +51,13 @@ public class UserInterface {
                             _____________________________________________________________________
                             You can choose to go "north", "east", "south" or "west".
                             You can type "look" to see the current room's description.
-                            You can interact with items by writing "take", "drop" and "eat"
-                            You can see your inventory by typing "inventory", "invent" or "inv"
-                            You can see your current health by typing "health" or "h"
+                            You can interact with items by writing "take", "drop" and "eat".
+                            You can see your inventory by typing "inventory", "invent" or "inv".
+                            You can see your current health by typing "health" or "h".
+                            You can equip weapons by taking a weapon from the room and "equip"
+                            it from your inventory.
+                            You can attack enemies if they are present and if you have a weapon
+                            equipped.
                             You can close the game by typing "exit".
                             _____________________________________________________________________
                             """);
@@ -97,7 +102,7 @@ public class UserInterface {
     }
 
 
-    public String lookRoom(Room room) { //Method used for the "look" command
+    public String lookRoom(Room room) { //Metode som bruges af "look" kommandoen og handleRoomDirection
         String roomDetails = room.toString();
         if (room.getItemList().isEmpty()) {
             if (room.getEnemies().isEmpty()) {
@@ -117,7 +122,7 @@ public class UserInterface {
     }
 
 
-    public void handleRoomDirection(boolean goDirection) {
+    public void handleRoomDirection(boolean goDirection) { //Printer oplysninger om det næste rum
         if (goDirection) {
             System.out.println("You are going to " + lookRoom(adventure.player.getCurrentRoom()));
         } else {
@@ -173,7 +178,7 @@ public class UserInterface {
         }
     }
 
-    public void handlePlayerEat (String foodEat) {
+    public void handlePlayerEat (String foodEat) { //Håndterer om spilleren kan spise
         if (adventure.player.eatItem(foodEat)) {
             if (adventure.player.food.getHealthPoints() > 0) {
                 System.out.println("You ate and gained: " + adventure.player.food.getFoodHealthPoints() + "HP \n" +
@@ -192,7 +197,7 @@ public class UserInterface {
         }
     }
 
-    public void handlePlayerEquip (String weaponName) {
+    public void handlePlayerEquip (String weaponName) { //Håndterer om spilleren kan armere sig med et item
         if (adventure.player.equipWeapon(weaponName)){
             System.out.println("Weapon equipped: " + adventure.player.getCurrentWeapon());
         }
@@ -204,7 +209,7 @@ public class UserInterface {
         }
     }
 
-    public void checkEquippedWeapon (Item weaponItem) {
+    public void checkEquippedWeapon (Item weaponItem) { //Tjekker om våbnet er melee, ranged eller slet ikke et våben
         if (weaponItem != null) {
             Weapon weapon = (Weapon)weaponItem;
             if (weapon.getWeaponType().equals("melee")){
@@ -217,6 +222,8 @@ public class UserInterface {
         else {System.out.println("No weapon equipped");}
     }
 
+    /*Handles if player can attack, what weapon type they have, if they don't have a current weapon, if their target
+    * doesn't exist or wants to hit the air and handles ranged weapon ammunition decreasing for every shot.*/
     public void handlePlayerAttack (String targetName) {
         if (adventure.player.playerAttack(targetName)){
             Weapon CW = (Weapon) adventure.player.getCurrentWeapon();
@@ -230,10 +237,12 @@ public class UserInterface {
                     System.out.println("You have no ammo!");
                 }
                 else if (rangedWeapon.getAmmunition() == 1) {
+                    rangedWeapon.setRangedAmmunition(rangedWeapon.getAmmunition()-1);
                     System.out.println("You shot your last shot at " + targetName + " with the " + adventure.player.getCurrentWeapon() + "!"
                     + "\n" + targetName + " has " + adventure.player.getCurrentRoom().findEnemy(targetName).getEnemyHealth() + " HP left");
                 }
                 else if (rangedWeapon.getAmmunition() > 1) {
+                    rangedWeapon.setRangedAmmunition(rangedWeapon.getAmmunition()-1);
                     System.out.println("You shot " + targetName + " with the " + adventure.player.getCurrentWeapon()
                     + "!\nAmmo left: " + rangedWeapon.getAmmunition()
                     + "\n" + targetName + " has " + adventure.player.getCurrentRoom().findEnemy(targetName).getEnemyHealth() + " HP left");
@@ -267,7 +276,7 @@ public class UserInterface {
         }
     }
 
-    public void handleEnemyAttack (String targetName) {
+    public void handleEnemyAttack (String targetName) { //Fjender slår aldrig uprovokeret af spilleren
         Enemy enemy = adventure.player.getCurrentRoom().findEnemy(targetName);
         if (adventure.player.getDidPlayerAttack()){
             if (enemy.getEnemyHealth() > 0){
