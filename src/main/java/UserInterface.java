@@ -279,22 +279,27 @@ public class UserInterface {
     public void handleEnemyAttack (String targetName) { //Fjender slår aldrig uprovokeret af spilleren
         Enemy enemy = adventure.player.getCurrentRoom().findEnemy(targetName);
         if (adventure.player.getDidPlayerAttack()){
-            if (enemy.getEnemyHealth() > 0){
-                adventure.player.food.setHealthPoints(adventure.player.food.getHealthPoints() - enemy.getEnemyWeapon().getWeaponDamage());
-                if (adventure.player.food.getHealthPoints() <= 0) {
-                    System.out.println(targetName + " attacks player with " + enemy.getEnemyWeapon() + " for " +
-                            enemy.getEnemyWeapon().getWeaponDamage() + " damage!\n" + "YOU DIED!");
-                    gameRunning = false;
+            try {
+                if (enemy.getEnemyHealth() > 0){
+                    adventure.player.food.setHealthPoints(adventure.player.food.getHealthPoints() - enemy.getEnemyWeapon().getWeaponDamage());
+                    if (adventure.player.food.getHealthPoints() <= 0) {
+                        System.out.println(targetName + " attacks player with " + enemy.getEnemyWeapon() + " for " +
+                                enemy.getEnemyWeapon().getWeaponDamage() + " damage!\n" + "YOU DIED!");
+                        gameRunning = false;
+                    }
+                    else {
+                        System.out.println(targetName + " attacks player with " + enemy.getEnemyWeapon() + " for " +
+                                enemy.getEnemyWeapon().getWeaponDamage() + " damage!");
+                    }
                 }
                 else {
-                    System.out.println(targetName + " attacks player with " + enemy.getEnemyWeapon() + " for " +
-                            enemy.getEnemyWeapon().getWeaponDamage() + " damage!");
+                    adventure.player.getCurrentRoom().getEnemies().remove(enemy);
+                    adventure.player.getCurrentRoom().getItemList().add(enemy.getEnemyWeapon());
+                    System.out.println("You are victorious! Enemy dropped " + enemy.getEnemyWeapon() + " in this room");
                 }
             }
-            else {
-                adventure.player.getCurrentRoom().getEnemies().remove(enemy);
-                adventure.player.getCurrentRoom().getItemList().add(enemy.getEnemyWeapon());
-                System.out.println("You are victorious! Enemy dropped " + enemy.getEnemyWeapon() + " in this room");
+            catch (Exception e) {
+                System.out.println("Enemy does not exist");
             }
         }
     }

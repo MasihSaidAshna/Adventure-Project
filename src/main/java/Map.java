@@ -1,7 +1,7 @@
 public class Map {
 
     //Skaber rum objekter
-    Room room1 = new Room("Room 1 ", "You stand at the entrance to dark, grim looking halls.. dare you enter? \nYou see doors to the East & South");
+    Room room1 = new Room("Room 1 ", "You stand at the entrance to dark, grim looking halls. \nYou see doors to the East & South");
     Room room2 = new Room("Room 2 ", "Room containing belongings to past adventurers, you see doors to the East & West");
     Room room3 = new Room("Room 3 ", "Looks like an old armory, you see doors to the West & South");
     Room room4 = new Room("Room 4 ", "Room with no distinct features, North & South");
@@ -13,9 +13,9 @@ public class Map {
 
     //Skaber fjende våben objekter
     RangedWeapon banditWeapon = new RangedWeapon("crossbow", "ranged", 5, 15);
-    MeleeWeapon minotaurWeapon = new MeleeWeapon("Bloody warhammer", "melee", 20);
-    MeleeWeapon livingArmorWeapon = new MeleeWeapon("Spectral longsword","melee",25);
-    MeleeWeapon enemySpiderWeapon = new MeleeWeapon("Moonlight Greatsword", "melee", 30);
+    MeleeWeapon minotaurWeapon = new MeleeWeapon("bloody warhammer", "melee", 20);
+    MeleeWeapon livingArmorWeapon = new MeleeWeapon("spectral longsword","melee",25);
+    MeleeWeapon enemySpiderWeapon = new MeleeWeapon("moonlight greatsword", "melee", 30);
 
     public Map() {
 
