@@ -119,7 +119,8 @@ public class Room {
 
     @Override
     public String toString() { //Udskriver navn på room, beskrivelse og items i rummet
-        return name + "\n" + description + "\n" + "There is: " + enemies + "\n" + "You spot Items: " + items + " \n";
+        String str = name + "\n" + description + "\n" + "There is: " + enemies + "\n" + "You found: " + items + " \n";
+        return str.replace("[", "").replace("]","");
     }
 }
 

@@ -1,12 +1,12 @@
 public class Map {
 
-    Room room1 = new Room("Room 1 ", "Room with no distinct features, you see doors to the East & South");
+    Room room1 = new Room("Room 1 ", "You stand at the entrance to dark, grim looking halls.. dare you enter? \nYou see doors to the East & South");
     Room room2 = new Room("Room 2 ", "Room containing belongings to past adventurers, you see doors to the East & West");
     Room room3 = new Room("Room 3 ", "Looks like an old armory, you see doors to the West & South");
     Room room4 = new Room("Room 4 ", "Room with no distinct features, North & South");
     Room room5 = new Room("Room 5 ", "Room filled with glistening piles of gold, you see one door to the South");
-    Room room6 = new Room("Room 6 ", "Room with no distinct features, you see doors to the North & South");
-    Room room7 = new Room("Room 7 ", "Room looks like an abandoned training room, you see doors to the North & East");
+    Room room6 = new Room("Room 6 ", "Room is eerily quiet with no distinct features, you see doors to the North & South");
+    Room room7 = new Room("Room 7 ", "Looks like an abandoned training room, you see doors to the North & East");
     Room room8 = new Room("Room 8 ", "Room with no distinct features, East & West & North");
     Room room9 = new Room("Room 9 ", "Room filled with cobwebs.. you feel uneasy. You see North & West");
 
@@ -55,7 +55,7 @@ public class Map {
         room9.addItemToRoom("spiders");
 
         //Tilføjer mad til rum
-        room1.addFoodToRoom( "bread", 10);
+        room1.addFoodToRoom( "healing potion", 50);
         room3.addFoodToRoom("rotten meat", -20);
         room5.addFoodToRoom("bottle of wine", 20);
         room7.addFoodToRoom("rat poison", -100);
@@ -69,7 +69,7 @@ public class Map {
 
         //Tilføjer fjender til rum med relevante parametrer
         room3.addEnemyToRoom("bandit", "This brigand seems to have been through many battles before", 50, banditWeapon);
-        room7.addEnemyToRoom("minotaur","a monster shaped half like a man and half like a bull, confined in this dungeon",75, minotaurWeapon);
+        room7.addEnemyToRoom("minotaur","A monstrosity shaped half like a man and half like a bull, confined in this dungeon",75, minotaurWeapon);
         room8.addEnemyToRoom("living armor","This entity seems to have nothing inside its armor, controlled by forces unknown",80, livingArmorWeapon);
         room9.addEnemyToRoom("eldritch spider", "A star-spawned horror, abominable beyond human understanding", 125, enemySpiderWeapon);
 

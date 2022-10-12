@@ -183,10 +183,15 @@ public class Player {
                             didPlayerAttack = true;
                             hitSuccessful = true;
                         } else if (CW.getWeaponType().equals("ranged")) {
-                            enemy.setEnemyHealth(enemy.getEnemyHealth() - CW.getWeaponDamage());
-                            CW.setRangedAmmunition(CW.getAmmunition() - 1);
-                            didPlayerAttack = true;
-                            hitSuccessful = true;
+                            if (CW.getAmmunition() > 0) {
+                                enemy.setEnemyHealth(enemy.getEnemyHealth() - CW.getWeaponDamage());
+                                CW.setRangedAmmunition(CW.getAmmunition() - 1);
+                                didPlayerAttack = true;
+                                hitSuccessful = true;
+                            }
+                            else {
+                                hitSuccessful = false;
+                            }
                         } else {
                             hitSuccessful = false;
                         }

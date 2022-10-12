@@ -104,11 +104,14 @@ public class UserInterface {
                 roomDetails = room.getName() + "\n" + room.getDescription() + "\n" +  "Room is empty!";
             }
             else {
-                roomDetails = room.getName() + "\n" + room.getDescription() + "\n" + room.getEnemies() + "\n" +  "Room is empty!";
+                roomDetails = room.getName() + "\n" + room.getDescription() + "\n" +
+                        room.getEnemies().toString().replace("[","").replace("]","") + "\nNo items found";
             }
         }
         else if (room.getEnemies().isEmpty()) {
-            roomDetails = room.getName() + "\n" + room.getDescription() + "\n" + room.getItemList() + "\n" + "No enemies around";
+            String str = room.getName() + "\n" + room.getDescription() + "\nYou found: " +
+                    room.getItemList().toString().replace("[","").replace("]","") + "\n" + "No enemies around";
+            roomDetails = str;
         }
         return roomDetails;
     }
@@ -172,8 +175,14 @@ public class UserInterface {
 
     public void handlePlayerEat (String foodEat) {
         if (adventure.player.eatItem(foodEat)) {
-            System.out.println("You ate and gained: " + adventure.player.food.getFoodHealthPoints() + "HP \n" +
-                    "You now have: " + adventure.player.food.getHealthPoints() + " health points");
+            if (adventure.player.food.getHealthPoints() > 0) {
+                System.out.println("You ate and gained: " + adventure.player.food.getFoodHealthPoints() + "HP \n" +
+                        "You now have: " + adventure.player.food.getHealthPoints() + " health points");
+            }
+            else {
+                System.out.println("YOU DIED!");
+                gameRunning = false;
+            }
         }
         else if (adventure.player.getCurrentRoom().findItem(foodEat) == null) {
             System.out.println("Item was not found..");
@@ -236,7 +245,25 @@ public class UserInterface {
             System.out.println("No weapon is equipped!");
         }
         else {
-            System.out.println("Target enemy not found");
+            Weapon CW = (Weapon) adventure.player.getCurrentWeapon();
+            if (CW.getWeaponType().equals("melee")) {
+                System.out.println("Swung " + CW.getItemName() + " in the air!");
+            }
+            else if (CW.getWeaponType().equals("ranged")) {
+                RangedWeapon rangedWeapon = (RangedWeapon) CW;
+                if (rangedWeapon.getAmmunition() == 0) {
+                    System.out.println("You have no ammo!");
+                }
+                else if (rangedWeapon.getAmmunition() == 1) {
+                    rangedWeapon.setRangedAmmunition(CW.getAmmunition()-1);
+                    System.out.println("You shot your last shot in the air with the " + adventure.player.getCurrentWeapon() + "!");
+                }
+                else if (rangedWeapon.getAmmunition() > 1) {
+                    rangedWeapon.setRangedAmmunition(CW.getAmmunition()-1);
+                    System.out.println("You shot the air with the " + adventure.player.getCurrentWeapon()
+                            + "!\nAmmo left: " + rangedWeapon.getAmmunition());
+                }
+            }
         }
     }
 
