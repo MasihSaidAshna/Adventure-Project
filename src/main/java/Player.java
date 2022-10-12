@@ -9,6 +9,7 @@ public class Player {
 
     private ArrayList<Item> inventory = new ArrayList<>(); //Arraylist som er player's inventory
 
+    private boolean didPlayerAttack;
     private int foodHealthPoints;
     Food food = new Food("food", foodHealthPoints);
 
@@ -31,6 +32,10 @@ public class Player {
 
     public ArrayList<Item> getInventoryList() {
         return inventory;
+    }
+
+    public boolean getDidPlayerAttack() {
+        return didPlayerAttack;
     }
 
     //Metode til at flytte forskellige retninger
@@ -169,20 +174,29 @@ public class Player {
         boolean hitSuccessful = false;
         if (getCurrentWeapon() != null){
             Weapon CW = (Weapon) currentWeapon;
-            for (int i = 0; i < currentRoom.getEnemies().size(); i++) {
-                Enemy enemy = currentRoom.getEnemies().get(i);
-                if (enemy.getEnemyName().equals(targetName)){
-                    if (CW.getWeaponType().equals("melee")) {
-                        hitSuccessful = true;
-                    }
-                    else if (CW.getWeaponType().equals("ranged")) {
-                        CW.setRangedAmmunition(CW.getAmmunition()-1);
-                        hitSuccessful = true;
-                    }
-                    else {
+            Enemy enemy = currentRoom.findEnemy(targetName);
+            try {
+                if (enemy.getEnemyName().equals(targetName)) {
+                    if (enemy.getEnemyHealth() > 0) {
+                        if (CW.getWeaponType().equals("melee")) {
+                            enemy.setEnemyHealth(enemy.getEnemyHealth() - CW.getWeaponDamage());
+                            didPlayerAttack = true;
+                            hitSuccessful = true;
+                        } else if (CW.getWeaponType().equals("ranged")) {
+                            enemy.setEnemyHealth(enemy.getEnemyHealth() - CW.getWeaponDamage());
+                            CW.setRangedAmmunition(CW.getAmmunition() - 1);
+                            didPlayerAttack = true;
+                            hitSuccessful = true;
+                        } else {
+                            hitSuccessful = false;
+                        }
+                    } else {
                         hitSuccessful = false;
                     }
                 }
+            }
+            catch (Exception e) {
+                hitSuccessful = false;
             }
         }
         return hitSuccessful;

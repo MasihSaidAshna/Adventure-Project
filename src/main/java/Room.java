@@ -107,6 +107,16 @@ public class Room {
     return null;
     }
 
+    public Enemy findEnemy (String enemyName) {
+        for (int i = 0; i < enemies.size(); i++){
+            Enemy enemy = enemies.get(i);
+            if (enemy.getEnemyName().equals(enemyName)){
+                return enemy;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() { //Udskriver navn på room, beskrivelse og items i rummet
         return name + "\n" + description + "\n" + "There is: " + enemies + "\n" + "You spot Items: " + items + " \n";

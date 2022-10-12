@@ -68,10 +68,10 @@ public class Map {
         room7.addMeleeToRoom("shield", "melee", 10);
 
         //Tilføjer fjender til rum med relevante parametrer
-        room3.addEnemyToRoom("Bandit", "This brigand seems to have been through many battles before", 50, banditWeapon);
-        room7.addEnemyToRoom("Minotaur","a monster shaped half like a man and half like a bull, confined in this dungeon",75, minotaurWeapon);
-        room8.addEnemyToRoom("Living armor","This entity seems to have nothing inside its armor, controlled by forces unknown",80, livingArmorWeapon);
-        room9.addEnemyToRoom("Eldritch spider", "A star-spawned horror, abominable beyond human understanding", 125, enemySpiderWeapon);
+        room3.addEnemyToRoom("bandit", "This brigand seems to have been through many battles before", 50, banditWeapon);
+        room7.addEnemyToRoom("minotaur","a monster shaped half like a man and half like a bull, confined in this dungeon",75, minotaurWeapon);
+        room8.addEnemyToRoom("living armor","This entity seems to have nothing inside its armor, controlled by forces unknown",80, livingArmorWeapon);
+        room9.addEnemyToRoom("eldritch spider", "A star-spawned horror, abominable beyond human understanding", 125, enemySpiderWeapon);
 
     }
 

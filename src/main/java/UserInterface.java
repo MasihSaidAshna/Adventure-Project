@@ -1,9 +1,7 @@
 import java.util.Scanner;
 
 public class UserInterface {
-    private Adventure adventure = new Adventure(); //Adventure objekt skabes
-
-    private Player player = new Player(); //Player objekt
+    private Adventure adventure = new Adventure(); //Adventure objekt skabes som koordinator
 
     private boolean gameRunning = true; // Initialiserer gameRunning som true
     private Scanner sc = new Scanner(System.in); // Scanner til bruger input
@@ -14,6 +12,8 @@ public class UserInterface {
                 _____________________________________________________________________
                 Welcome To The Adventure Game
                 In this game you can explore a dungeon and interact with items inside
+                Beware there are monsters in these halls
+                Should you defend yourself, weapons can be found in some rooms
                 If you need help try entering the "help" command
                 Where do you want to go?
                 _____________________________________________________________________
@@ -87,6 +87,7 @@ public class UserInterface {
                     System.out.println("Enter the name of the enemy you want to attack");
                     String enemyName = sc.nextLine().toLowerCase();
                     handlePlayerAttack(enemyName);
+                    handleEnemyAttack(enemyName);
                     break;
                 case "exit":
                     System.out.println("Ending adventure..");
@@ -106,7 +107,7 @@ public class UserInterface {
                 roomDetails = room.getName() + "\n" + room.getDescription() + "\n" + room.getEnemies() + "\n" +  "Room is empty!";
             }
         }
-        if (room.getEnemies().isEmpty()) {
+        else if (room.getEnemies().isEmpty()) {
             roomDetails = room.getName() + "\n" + room.getDescription() + "\n" + room.getItemList() + "\n" + "No enemies around";
         }
         return roomDetails;
@@ -171,7 +172,8 @@ public class UserInterface {
 
     public void handlePlayerEat (String foodEat) {
         if (adventure.player.eatItem(foodEat)) {
-            System.out.println("You ate and gained: " + adventure.player.food.getFoodHealthPoints() + "HP \n" + "You now have: " + adventure.player.food.getHealthPoints() + " health points");
+            System.out.println("You ate and gained: " + adventure.player.food.getFoodHealthPoints() + "HP \n" +
+                    "You now have: " + adventure.player.food.getHealthPoints() + " health points");
         }
         else if (adventure.player.getCurrentRoom().findItem(foodEat) == null) {
             System.out.println("Item was not found..");
@@ -193,9 +195,15 @@ public class UserInterface {
         }
     }
 
-    public void checkEquippedWeapon (Item item) {
-        if (item != null) {
-            System.out.println("Currently equipped " + adventure.player.getCurrentWeapon());
+    public void checkEquippedWeapon (Item weaponItem) {
+        if (weaponItem != null) {
+            Weapon weapon = (Weapon)weaponItem;
+            if (weapon.getWeaponType().equals("melee")){
+                System.out.println("Currently equipped " + adventure.player.getCurrentWeapon());
+            }
+            else if (weapon.getWeaponType().equals("ranged")){
+                System.out.println("Currently equipped " + adventure.player.getCurrentWeapon() + "\nAmmo: " + weapon.getAmmunition());
+            }
         }
         else {System.out.println("No weapon equipped");}
     }
@@ -204,7 +212,8 @@ public class UserInterface {
         if (adventure.player.playerAttack(targetName)){
             Weapon CW = (Weapon) adventure.player.getCurrentWeapon();
             if (CW.getWeaponType().equals("melee")) {
-                System.out.println("Swung in the air with " + adventure.player.getCurrentWeapon() + "!");
+                System.out.println("You struck " + targetName + " with the " + adventure.player.getCurrentWeapon() + "!"
+                + "\n" + targetName + " has " + adventure.player.getCurrentRoom().findEnemy(targetName).getEnemyHealth() + " HP left");
             }
             else if (CW.getWeaponType().equals("ranged")) {
                 RangedWeapon rangedWeapon = (RangedWeapon) CW;
@@ -212,16 +221,45 @@ public class UserInterface {
                     System.out.println("You have no ammo!");
                 }
                 else if (rangedWeapon.getAmmunition() == 1) {
-                    System.out.println("You shoot your last shot with " + rangedWeapon + "!\nAmmo left: " + rangedWeapon.getAmmunition());
+                    System.out.println("You shot your last shot at " + targetName + " with the " + adventure.player.getCurrentWeapon() + "!"
+                    + "\n" + targetName + " has " + adventure.player.getCurrentRoom().findEnemy(targetName).getEnemyHealth() + " HP left");
                 }
                 else if (rangedWeapon.getAmmunition() > 1) {
-                    System.out.println("Shot the air with " + rangedWeapon + "!\n Ammo left: " + rangedWeapon.getAmmunition());
+                    System.out.println("You shot " + targetName + " with the " + adventure.player.getCurrentWeapon()
+                    + "!\nAmmo left: " + rangedWeapon.getAmmunition()
+                    + "\n" + targetName + " has " + adventure.player.getCurrentRoom().findEnemy(targetName).getEnemyHealth() + " HP left");
                 }
             }
+            else {System.out.println("Cant attack with no weapon equipped!");}
+        }
+        else if (adventure.player.getCurrentWeapon() == null){
+            System.out.println("No weapon is equipped!");
         }
         else {
-            System.out.println("Cant attack with no weapon equipped!");
+            System.out.println("Target enemy not found");
         }
     }
 
+    public void handleEnemyAttack (String targetName) {
+        Enemy enemy = adventure.player.getCurrentRoom().findEnemy(targetName);
+        if (adventure.player.getDidPlayerAttack()){
+            if (enemy.getEnemyHealth() > 0){
+                adventure.player.food.setHealthPoints(adventure.player.food.getHealthPoints() - enemy.getEnemyWeapon().getWeaponDamage());
+                if (adventure.player.food.getHealthPoints() <= 0) {
+                    System.out.println(targetName + " attacks player with " + enemy.getEnemyWeapon() + " for " +
+                            enemy.getEnemyWeapon().getWeaponDamage() + " damage!\n" + "YOU DIED!");
+                    gameRunning = false;
+                }
+                else {
+                    System.out.println(targetName + " attacks player with " + enemy.getEnemyWeapon() + " for " +
+                            enemy.getEnemyWeapon().getWeaponDamage() + " damage!");
+                }
+            }
+            else {
+                adventure.player.getCurrentRoom().getEnemies().remove(enemy);
+                adventure.player.getCurrentRoom().getItemList().add(enemy.getEnemyWeapon());
+                System.out.println("You are victorious! Enemy dropped " + enemy.getEnemyWeapon() + " in this room");
+            }
+        }
+    }
 }

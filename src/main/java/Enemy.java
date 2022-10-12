@@ -3,7 +3,7 @@ public class Enemy {
     private String enemyName;
     private String description;
     private int enemyHealth;
-    private Item weapon;
+    private Weapon weapon;
 
     public Enemy (String enemyName, String description, int enemyHealth, Weapon weapon) {
         this.enemyName = enemyName;
@@ -14,6 +14,22 @@ public class Enemy {
 
     public String getEnemyName() {
         return enemyName;
+    }
+
+    public int getEnemyHealth () {return enemyHealth;}
+
+    public void setEnemyHealth(int enemyHealth) {
+        this.enemyHealth = enemyHealth;
+    }
+
+    public Weapon getEnemyWeapon () {
+        if (weapon.getWeaponType().equals("melee")){
+            return (MeleeWeapon) weapon;
+        }
+        else if (weapon.getWeaponType().equals("ranged")){
+            return (RangedWeapon) weapon;
+        }
+        return null;
     }
 
     public String toString() {
