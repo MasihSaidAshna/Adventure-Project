@@ -6,11 +6,11 @@ public class UserInterface {
     private boolean gameRunning = true; // Initialiserer gameRunning som true
     private Scanner sc = new Scanner(System.in); // Scanner til bruger input
 
-    public void startprogram() { //Metode
+    public void startProgram() { //Metode
         //Menu til brugeren
         System.out.println("""
                 _____________________________________________________________________
-                Welcome To The Adventure Game
+                Welcome to CRYPT OF UMBRA
                 In this game you can explore a dungeon and interact with items inside
                 Beware there are monsters in these halls
                 Should you defend yourself, weapons can be found in some rooms
